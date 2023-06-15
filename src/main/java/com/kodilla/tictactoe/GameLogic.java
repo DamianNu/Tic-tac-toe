@@ -1,16 +1,33 @@
 package com.kodilla.tictactoe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameLogic {
-    private char[] board = new char[9];
+    private int size;
+    private int winningSymbols;
+    private char[][] board;
     private Player player1;
     private Player player2;
-    private ArrayList<Integer> availableMoves = new ArrayList<>();
+    private ArrayList<String> availableMoves = new ArrayList<>();
     private int numberRound;
     private boolean turnPlayer1;
     private boolean player2IsAComputer;
+
+    public int getWinningSymbols() {
+        return winningSymbols;
+    }
+
+    public void setWinningSymbols(int winningSymbols) {
+        this.winningSymbols = winningSymbols;
+    }
+
+    public int getSize() {
+        return size;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
 
     public boolean isPlayer2IsAComputer() {
         return player2IsAComputer;
@@ -36,7 +53,7 @@ public class GameLogic {
         return player2;
     }
 
-    public void setBoard(char[] board) {
+    public void setBoard(char[][] board) {
         this.board = board;
     }
 
@@ -57,30 +74,46 @@ public class GameLogic {
     }
 
 
-    public List<Integer> getAvailableMoves() {
+    public ArrayList<String> getAvailableMoves() {
         return availableMoves;
     }
 
-    public char[] setField(int x, char y) {
-        board[x] = y;
+
+    public char[][] newBoard() {
+        int size = getSize();
+        char[][] board1 = new char[size][size];
+        for (int i = 0; i < board1.length; i++) {
+            for (int j = 0; j < board1[i].length; j++) {
+                board1[i][j] = ' ';
+            }
+        }
+        board = board1;
         return board;
     }
 
-    public char[] getBoard() {
+    public void setField(int x, int y, char z) {
+        board[x][y] = z;
+    }
+
+    public char[][] getBoard() {
         return board;
     }
 
-    public char[] newCleanBoard() {
-        char[] cleanBoard = new char[9];
+    public char[][] newCleanBoard() {
+        char[][] cleanBoard = new char[size][size];
         setBoard(cleanBoard);
         return board;
     }
 
 
-    public ArrayList<Integer> newAvailableMoves() {
-        for (int i = 1; i < 10; i++) {
-            availableMoves.add(i - 1, i);
+    public ArrayList<String> newAvailableMoves() {
+        availableMoves = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                availableMoves.add(i + "" + j);
+            }
         }
+
         return availableMoves;
     }
 
@@ -99,21 +132,143 @@ public class GameLogic {
     }
 
     public boolean winLine(Player player) {
-        char[] tabWin = getBoard();
-        if ((player.getSymbol() == tabWin[0] && player.getSymbol() == tabWin[1] && player.getSymbol() == tabWin[2]) ||
-                (player.getSymbol() == tabWin[3] && player.getSymbol() == tabWin[4] && player.getSymbol() == tabWin[5]) ||
-                (player.getSymbol() == tabWin[6] && player.getSymbol() == tabWin[7] && player.getSymbol() == tabWin[8]) ||
-                (player.getSymbol() == tabWin[0] && player.getSymbol() == tabWin[3] && player.getSymbol() == tabWin[6]) ||
-                (player.getSymbol() == tabWin[1] && player.getSymbol() == tabWin[4] && player.getSymbol() == tabWin[7]) ||
-                (player.getSymbol() == tabWin[2] && player.getSymbol() == tabWin[5] && player.getSymbol() == tabWin[8]) ||
-                (player.getSymbol() == tabWin[0] && player.getSymbol() == tabWin[4] && player.getSymbol() == tabWin[8]) ||
-                (player.getSymbol() == tabWin[6] && player.getSymbol() == tabWin[4] && player.getSymbol() == tabWin[2])) {
-            player.setWinRounds(player.getWinRounds() + 1);
-            return true;
+        char[][] tabWin = getBoard();
+        int number;
+        int x;
+        int y;
+        // Check the win in the line horizontally
+        for (int j = 0; j < size; j++) {
+            x = j;
+            number = 0;
+            for (int i = 0; i < size; i++) {
+                y = i;
+                if (tabWin[x][y] == player.getSymbol()) {
+                    number = number + 1;
+                    if (number == getWinningSymbols()) {
+                        return true;
+                    }
+                } else {
+                    number = 0;
+                }
+            }
+        }
+        // Check the win in the line vertically
+        for (int j = 0; j < size; j++) {
+            y = j;
+            number = 0;
+            for (int i = 0; i < size; i++) {
+                x = i;
+                if (tabWin[x][y] == player.getSymbol()) {
+                    number = number + 1;
+                    if (number == getWinningSymbols()) {
+                        return true;
+                    }
+                } else {
+                    number = 0;
+                }
+            }
+        }
+
+        // Check the win in the line towards the bottom right
+        int k = -1;
+        for (int j = 0; j < size; j++) {
+            number = 0;
+            k = k + 1;
+            for (int i = 0; i < size; i++) {
+                y = i + k;
+                x = i;
+                try {
+                    boolean spr = tabWin[x][y] == player.getSymbol();
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    number = 0;
+                    break;
+                }
+                if (tabWin[x][y] == player.getSymbol()) {
+                    number = number + 1;
+                    if (number == getWinningSymbols()) {
+                        return true;
+                    }
+                } else {
+                    number = 0;
+                }
+            }
+        }
+        k = -1;
+        for (int j = 0; j < size; j++) {
+            number = 0;
+            k = k + 1;
+            for (int i = 0; i < size; i++) {
+                y = i;
+                x = i + k;
+                try {
+                    boolean spr = tabWin[x][y] == player.getSymbol();
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    number = 0;
+                    break;
+                }
+                if (tabWin[x][y] == player.getSymbol()) {
+                    number = number + 1;
+                    if (number == getWinningSymbols()) {
+                        return true;
+                    }
+                } else {
+                    number = 0;
+                }
+            }
+        }
+        // Check the win in the line towards left down
+        int l = -1;
+        for (int j = size; j > 0; j--) {
+            number = 0;
+            l = l + 1;
+
+            for (int i = 0; i < size; i++) {
+                y = size - i - 1 - l;
+                x = i;
+                try {
+                    boolean spr = tabWin[x][y] == player.getSymbol();
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    number = 0;
+                    break;
+                }
+                if (tabWin[x][y] == player.getSymbol()) {
+                    number = number + 1;
+                    if (number == getWinningSymbols()) {
+                        return true;
+                    }
+                } else {
+                    number = 0;
+                }
+            }
+        }
+        int m = -1;
+        for (int j = size; j > 0; j--) {
+            number = 0;
+            m = m + 1;
+
+            for (int i = 0; i < size; i++) {
+                y = size - i - 1;
+                x = i + m;
+                try {
+                    boolean spr = tabWin[x][y] == player.getSymbol();
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    number = 0;
+                    break;
+                }
+                if (tabWin[x][y] == player.getSymbol()) {
+                    number = number + 1;
+                    if (number == getWinningSymbols()) {
+                        return true;
+                    }
+                } else {
+                    number = 0;
+                }
+            }
         }
         return false;
     }
 }
+
 
 
 
