@@ -132,12 +132,12 @@ public class GameLogic {
     }
 
     public boolean winLine(Player player){
-        if(winLineHorizontally(player)==true ||
-        winLineVertically(player)==true ||
-        winLineDiagonalR(player)==true ||
-        winLineDiagonalRR(player)==true ||
-        winLineDiagonalLineL(player)==true ||
-        winLineDiagonalLineLL(player)==true ){
+        if(winLineHorizontally(player) ||
+        winLineVertically(player) ||
+        winLineDiagonalR(player) ||
+        winLineDiagonalRR(player) ||
+        winLineDiagonalLineL(player) ||
+        winLineDiagonalLineLL(player)){
             return true;
         }
         return false;

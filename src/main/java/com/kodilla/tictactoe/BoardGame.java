@@ -107,10 +107,12 @@ public class BoardGame {
             gameLogic.getAvailableMoves().remove(choise);
         } else {
             System.out.println("\u001B[33mThis field on the board is occupied\nTry again\u001B[0m");
+            boardDisplay.showBoard(gameLogic.getBoard(), gameLogic.getSize());
+            System.out.println("The current turn belongs to the " + player.getName() + " \u001B[33m>" + player.getSymbol() + "<\u001B[0m");
             movePlayer(player, gameLogic);
         }
         if (gameLogic.winLine(player)) {
-            boardDisplay.showBoard(gameLogic);
+            boardDisplay.showBoard(gameLogic.getBoard(), gameLogic.getSize());
             gameLogic.newBoard();
             gameLogic.newAvailableMoves();
             player.setWinRounds(player.getWinRounds() + 1);
@@ -129,7 +131,7 @@ public class BoardGame {
         }
         if (gameLogic.checkDraw()) {
             System.out.println("Draw!! New round");
-            boardDisplay.showBoard(gameLogic);
+            boardDisplay.showBoard(gameLogic.getBoard(), gameLogic.getSize());
             gameLogic.newBoard();
             gameLogic.newAvailableMoves();
         }
@@ -140,22 +142,19 @@ public class BoardGame {
 
     public String moveComputer(GameLogic gameLogic) {
         Random random = new Random();
-        if (AIChoice.choiseAIWinHorizontallyline(gameLogic) !=null) {
-            String choiseComp = AIChoice.choiseAIWinHorizontallyline(gameLogic);
-            return choiseComp;
-        } else if (AIChoice.choiseAIWinVerticalLine(gameLogic) !=null) {
-            String choiseComp = AIChoice.choiseAIWinVerticalLine(gameLogic);
-            return choiseComp;
+        if (AIChoice.choiseAIWinHorizontallyline(gameLogic) != null) {
+            return AIChoice.choiseAIWinHorizontallyline(gameLogic);
+        } else if (AIChoice.choiseAIWinVerticalLine(gameLogic) != null) {
+            return AIChoice.choiseAIWinVerticalLine(gameLogic);
         }
-            int choiseC = random.nextInt(0, gameLogic.getAvailableMoves().size());
-            String choiseComputer = gameLogic.getAvailableMoves().get(choiseC);
-            return choiseComputer;
-        }
+        int choiseC = random.nextInt(0, gameLogic.getAvailableMoves().size());
+        return gameLogic.getAvailableMoves().get(choiseC);
+    }
 
     public void round(GameLogic gameLogic) {
         BoardDisplay boardDisplay = new BoardDisplay();
         while (true) {
-            boardDisplay.showBoard(gameLogic);
+            boardDisplay.showBoard(gameLogic.getBoard(), gameLogic.getSize());
             actualPlayerTurn(gameLogic);
             boolean p1 = gameLogic.isTurnPlayer1();
             if (p1) {
@@ -194,12 +193,13 @@ public class BoardGame {
         if (choise2 < 3 || choise2 > 10) {
             System.out.println("You entered incorrect data, try again");
             choiseBoardSize(gameLogic);
-        }
-        gameLogic.setSize(choise2);
-        if (choise2 < 5) {
-            gameLogic.setWinningSymbols(3);
         } else {
-            gameLogic.setWinningSymbols(5);
+            gameLogic.setSize(choise2);
+            if (choise2 < 5) {
+                gameLogic.setWinningSymbols(3);
+            } else {
+                gameLogic.setWinningSymbols(5);
+            }
         }
     }
 }
