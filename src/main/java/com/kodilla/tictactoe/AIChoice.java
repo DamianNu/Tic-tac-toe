@@ -1,16 +1,12 @@
 package com.kodilla.tictactoe;
 
-public class AIChoise {
+public class AIChoice {
 
-    //horizontally
-    public static String choiseAI(GameLogic gameLogic) {
+    public static String choiseAIWinHorizontallyline(GameLogic gameLogic) {
         char[][] tab = gameLogic.getBoard();
         int number;
-        int x;
-        int y;
-        int c = 0;
-        int d = 0;
-        String choise;
+        int x, y, c = 0, d = 0;
+        String choise = null;
         for (int j = 0; j < gameLogic.getSize(); j++) {
             x = j;
             number = 0;
@@ -45,10 +41,14 @@ public class AIChoise {
                 }
             }
         }
+        return choise;
+    }
 
-        c = 0;
-        d = 0;
-        choise = null;
+    public static String choiseAIWinVerticalLine(GameLogic gameLogic) {
+        char[][] tab = gameLogic.getBoard();
+        int number;
+        int x, y, c = 0, d = 0;
+        String choise = null;
         for (int j = 0; j < gameLogic.getSize(); j++) {
             y = j;
             number = 0;
@@ -79,12 +79,10 @@ public class AIChoise {
                         number = 0;
                         c = 0;
                         d = 0;
-
                     }
                 }
             }
         }
-        System.out.println(choise + " 3");
         return choise;
     }
 }

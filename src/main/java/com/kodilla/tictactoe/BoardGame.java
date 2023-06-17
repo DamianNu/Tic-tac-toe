@@ -22,7 +22,7 @@ public class BoardGame {
         gameLogic.setTurnPlayer1(true);
         System.out.println("Game for 1 or 2 people?");
         System.out.println("1 -> 'Single Player'\n2 -> 'Two Player'");
-        int choise = new BoardDisplay().movePlayerC();
+        int choise = BoardDisplay.movePlayerC();
         switch (choise) {
             case 1 -> {
                 gameLogic.setPlayer2IsAComputer(true);
@@ -40,7 +40,7 @@ public class BoardGame {
 
         System.out.println("Player1 select your symbol 'X' or 'O'.");
         System.out.println("1 -> 'X'\n2 -> 'O'");
-        int choise2 = new BoardDisplay().movePlayerC();
+        int choise2 = BoardDisplay.movePlayerC();
         switch (choise2) {
             case 1 -> {
                 gameLogic.getPlayer1().setSymbol('X');
@@ -56,7 +56,7 @@ public class BoardGame {
 
     public void newGameRounds(GameLogic gameLogic) {
         System.out.println("Select Choose how many rounds.");
-        gameLogic.setNumberRound(new BoardDisplay().movePlayerC());
+        gameLogic.setNumberRound(BoardDisplay.movePlayerC());
         if (gameLogic.getNumberRound() < 1) {
             System.out.println("Please enter the number of rounds again!");
             newGameRounds(gameLogic);
@@ -73,29 +73,29 @@ public class BoardGame {
             choise = moveComputer(gameLogic);
         } else {
             System.out.println("Enter line number");
-            a = new BoardDisplay().movePlayerC();
+            a = BoardDisplay.movePlayerC();
             System.out.println("Enter the column number");
-            b = new BoardDisplay().movePlayerC();
+            b = BoardDisplay.movePlayerC();
             if (a >= gameLogic.getSize() || a < 0 || b >= gameLogic.getSize() || b < 0) {
                 System.out.println("Movement impossible, please try again");
                 System.out.println("Enter line number");
-                a = new BoardDisplay().movePlayerC();
+                a = BoardDisplay.movePlayerC();
                 System.out.println("Enter the column number");
-                b = new BoardDisplay().movePlayerC();
+                b = BoardDisplay.movePlayerC();
             }
             choise = a + "" + b;
             boolean choiseX = false;
             try {
                 choiseX = movePlayerX(gameLogic.getBoard(), player.getSymbol(), a, b);
             } catch (IllegalTrafficException e) {
-                e.getMessage();
+                System.out.println(e.getMessage());
+                choiseX = true;
             }
             if (!choiseX) {
                 movePlayer(player, gameLogic);
             }
 
         }
-        System.out.println(gameLogic.getAvailableMoves());
         traffic = gameLogic.getAvailableMoves().stream()
                 .anyMatch(u -> u.equals(choise));
         if (traffic) {
@@ -119,7 +119,7 @@ public class BoardGame {
                 System.out.println("\u001B[33m" + player.getName() + " > " + player.getSymbol() + " < Winner!!\u001B[0m\nWould you like to start a new game?");
                 System.out.println("Select 'Yes' or 'No'.");
                 System.out.println("1 -> 'Yes'\n2 -> 'No'");
-                int choise2 = new BoardDisplay().movePlayerC();
+                int choise2 = BoardDisplay.movePlayerC();
                 switch (choise2) {
                     case 1 -> startGame();
                     case 2 -> System.exit(0);
@@ -131,7 +131,6 @@ public class BoardGame {
             System.out.println("Draw!! New round");
             boardDisplay.showBoard(gameLogic);
             gameLogic.newBoard();
-            ;
             gameLogic.newAvailableMoves();
         }
         System.out.println("State of the game: " + gameLogic.getNumberRound());
@@ -141,15 +140,17 @@ public class BoardGame {
 
     public String moveComputer(GameLogic gameLogic) {
         Random random = new Random();
-        if (AIChoise.choiseAI(gameLogic) != null) {
-            String choiseComp = AIChoise.choiseAI(gameLogic);
+        if (AIChoice.choiseAIWinHorizontallyline(gameLogic) !=null) {
+            String choiseComp = AIChoice.choiseAIWinHorizontallyline(gameLogic);
             return choiseComp;
-        } else {
+        } else if (AIChoice.choiseAIWinVerticalLine(gameLogic) !=null) {
+            String choiseComp = AIChoice.choiseAIWinVerticalLine(gameLogic);
+            return choiseComp;
+        }
             int choiseC = random.nextInt(0, gameLogic.getAvailableMoves().size());
             String choiseComputer = gameLogic.getAvailableMoves().get(choiseC);
             return choiseComputer;
         }
-    }
 
     public void round(GameLogic gameLogic) {
         BoardDisplay boardDisplay = new BoardDisplay();
@@ -189,7 +190,7 @@ public class BoardGame {
         System.out.println("Enter board size!\n");
         System.out.println("The minimum board size is 3x3 \nand the maximum is 10x10");
         System.out.println("Enter a number from 3 to 10");
-        int choise2 = new BoardDisplay().movePlayerC();
+        int choise2 = BoardDisplay.movePlayerC();
         if (choise2 < 3 || choise2 > 10) {
             System.out.println("You entered incorrect data, try again");
             choiseBoardSize(gameLogic);

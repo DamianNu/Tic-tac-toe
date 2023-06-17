@@ -131,7 +131,19 @@ public class GameLogic {
         return false;
     }
 
-    public boolean winLine(Player player) {
+    public boolean winLine(Player player){
+        if(winLineHorizontally(player)==true ||
+        winLineVertically(player)==true ||
+        winLineDiagonalR(player)==true ||
+        winLineDiagonalRR(player)==true ||
+        winLineDiagonalLineL(player)==true ||
+        winLineDiagonalLineLL(player)==true ){
+            return true;
+        }
+        return false;
+    }
+
+    public boolean winLineHorizontally(Player player) {
         char[][] tabWin = getBoard();
         int number;
         int x;
@@ -152,6 +164,11 @@ public class GameLogic {
                 }
             }
         }
+        return false;
+    }
+    public boolean winLineVertically(Player player) {
+        char[][] tabWin = getBoard();
+        int number, x, y;
         // Check the win in the line vertically
         for (int j = 0; j < size; j++) {
             y = j;
@@ -168,8 +185,12 @@ public class GameLogic {
                 }
             }
         }
-
-        // Check the win in the line towards the bottom right
+        return false;
+    }
+    public boolean winLineDiagonalR(Player player) {
+        char[][] tabWin = getBoard();
+        int number, x, y;
+        // Check the win in the line towards the bottom right - first side
         int k = -1;
         for (int j = 0; j < size; j++) {
             number = 0;
@@ -193,7 +214,14 @@ public class GameLogic {
                 }
             }
         }
-        k = -1;
+        return false;
+    }
+
+    public boolean winLineDiagonalRR(Player player) {
+        char[][] tabWin = getBoard();
+        int number, x, y;
+        // Check the win in the line towards the bottom right - second side
+        int k = -1;
         for (int j = 0; j < size; j++) {
             number = 0;
             k = k + 1;
@@ -216,7 +244,12 @@ public class GameLogic {
                 }
             }
         }
-        // Check the win in the line towards left down
+        return false;
+    }
+    public boolean winLineDiagonalLineL(Player player) {
+        char[][] tabWin = getBoard();
+        int number, x, y;
+        // Check the win in the line towards left down - first side
         int l = -1;
         for (int j = size; j > 0; j--) {
             number = 0;
@@ -241,6 +274,12 @@ public class GameLogic {
                 }
             }
         }
+        return false;
+    }
+    public boolean winLineDiagonalLineLL(Player player) {
+        char[][] tabWin = getBoard();
+        int number, x, y;
+        // Check the win in the line towards left down - second side
         int m = -1;
         for (int j = size; j > 0; j--) {
             number = 0;

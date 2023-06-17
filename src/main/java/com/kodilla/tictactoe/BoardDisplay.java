@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class BoardDisplay {
 
 
+
     public void showBoard(GameLogic gameLogic) {
         int size = gameLogic.getSize();
         char[][] board = gameLogic.getBoard();
@@ -26,13 +27,13 @@ public class BoardDisplay {
         System.out.println();
     }
 
-    public int movePlayerC() throws InputMismatchException {
+    public static int movePlayerC() throws InputMismatchException {
         Scanner scanner = new Scanner(System.in);
         int choice;
         try {
             choice = scanner.nextInt();
         } catch (InputMismatchException e) {
-            e.getMessage();
+            System.out.println(e.getMessage());
             movePlayerC();
             return 0;
         }
