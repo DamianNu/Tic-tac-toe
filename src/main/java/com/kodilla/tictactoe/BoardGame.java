@@ -37,20 +37,25 @@ public class BoardGame {
             }
             default -> newGame(gameLogic);
         }
-
+        boolean spr = true;
         System.out.println("Player1 select your symbol 'X' or 'O'.");
         System.out.println("1 -> 'X'\n2 -> 'O'");
-        int choise2 = BoardDisplay.movePlayerC();
-        switch (choise2) {
-            case 1 -> {
-                gameLogic.getPlayer1().setSymbol('X');
-                gameLogic.getPlayer2().setSymbol('O');
+        while (spr) {
+            int choise2 = BoardDisplay.movePlayerC();
+            switch (choise2) {
+                case 1 -> {
+                    gameLogic.getPlayer1().setSymbol('X');
+                    gameLogic.getPlayer2().setSymbol('O');
+                    spr = false;
+                }
+                case 2 -> {
+                    gameLogic.getPlayer1().setSymbol('O');
+                    gameLogic.getPlayer2().setSymbol('X');
+                    spr = false;
+
+                }
+                default -> System.out.println("Please select the 'X' or 'O' symbol again\n1 -> 'X'\n2 -> 'O'");
             }
-            case 2 -> {
-                gameLogic.getPlayer1().setSymbol('O');
-                gameLogic.getPlayer2().setSymbol('X');
-            }
-            default -> newGame(gameLogic);
         }
     }
 
@@ -107,12 +112,12 @@ public class BoardGame {
             gameLogic.getAvailableMoves().remove(choise);
         } else {
             System.out.println("\u001B[33mThis field on the board is occupied\nTry again\u001B[0m");
-            boardDisplay.showBoard(gameLogic.getBoard(), gameLogic.getSize());
+            boardDisplay.showBoard(gameLogic.getBoard());
             System.out.println("The current turn belongs to the " + player.getName() + " \u001B[33m>" + player.getSymbol() + "<\u001B[0m");
             movePlayer(player, gameLogic);
         }
         if (gameLogic.winLine(player)) {
-            boardDisplay.showBoard(gameLogic.getBoard(), gameLogic.getSize());
+            boardDisplay.showBoard(gameLogic.getBoard());
             gameLogic.newBoard();
             gameLogic.newAvailableMoves();
             player.setWinRounds(player.getWinRounds() + 1);
@@ -131,7 +136,7 @@ public class BoardGame {
         }
         if (gameLogic.checkDraw()) {
             System.out.println("Draw!! New round");
-            boardDisplay.showBoard(gameLogic.getBoard(), gameLogic.getSize());
+            boardDisplay.showBoard(gameLogic.getBoard());
             gameLogic.newBoard();
             gameLogic.newAvailableMoves();
         }
@@ -154,7 +159,7 @@ public class BoardGame {
     public void round(GameLogic gameLogic) {
         BoardDisplay boardDisplay = new BoardDisplay();
         while (true) {
-            boardDisplay.showBoard(gameLogic.getBoard(), gameLogic.getSize());
+            boardDisplay.showBoard(gameLogic.getBoard());
             actualPlayerTurn(gameLogic);
             boolean p1 = gameLogic.isTurnPlayer1();
             if (p1) {
